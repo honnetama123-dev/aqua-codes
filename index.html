@@ -12,6 +12,7 @@
             --ui-border: rgba(0, 242, 255, 0.3);
         }
 
+        /* box-sizingを全体に適用 */
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
@@ -25,7 +26,8 @@
             flex-direction: column;
             justify-content: flex-start;
             align-items: center;
-            padding: 40px 0 20px 0;
+            /* クレジット固定用の余白を確保しつつ、上部余白を凝縮 */
+            padding: 20px 0 60px 0;
         }
 
         /* --- 背景演出 --- */
@@ -67,20 +69,21 @@
             transition: opacity 0.8s ease; 
             width: 90%; 
             max-width: 400px;
+            /* 上下中央配置のためのマージン */
             margin: auto 0;
         }
 
         h1 {
             font-family: 'Orbitron', sans-serif;
-            font-size: clamp(2rem, 6vw, 2.8rem);
-            letter-spacing: 0.6rem;
-            margin-bottom: 1.5rem;
+            font-size: clamp(1.8rem, 6vw, 2.5rem); /* 少し小さく */
+            letter-spacing: 0.5rem;
+            margin-bottom: 1rem; /* 凝縮 */
             text-shadow: 0 0 20px var(--aqua-glow), 0 0 40px var(--energy-cyan);
         }
 
         /* --- 取り扱い説明 (Manual) --- */
         #manual-area {
-            margin-bottom: 1.5rem;
+            margin-bottom: 1rem; /* 凝縮 */
             text-align: center;
         }
 
@@ -113,24 +116,24 @@
         }
 
         #manual-content.open {
-            max-height: 250px;
+            max-height: 200px; /* 少し縮小 */
             margin-top: 10px;
             opacity: 1;
-            padding: 15px;
+            padding: 12px;
             border: 1px solid var(--ui-border);
             overflow-y: auto;
         }
 
         .manual-text {
             font-size: 0.7rem;
-            line-height: 1.7;
+            line-height: 1.5;
             color: var(--white-glow);
         }
 
         .manual-header {
             color: var(--aqua-glow);
             font-weight: bold;
-            margin-bottom: 5px;
+            margin-bottom: 3px;
             display: block;
             font-family: 'Orbitron', sans-serif;
             font-size: 0.6rem;
@@ -139,7 +142,7 @@
         /* --- 入力画面 --- */
         .form-container {
             background: rgba(255, 255, 255, 0.03);
-            padding: 2.5rem 1.5rem;
+            padding: 1.5rem 1.2rem; /* 凝縮 */
             border: 1px solid var(--ui-border);
             backdrop-filter: blur(25px);
             box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
@@ -147,15 +150,17 @@
 
         input[type="date"] {
             background: rgba(0, 0, 0, 0.6); border: 1px solid var(--aqua-glow);
-            color: var(--white-glow); padding: 15px; font-size: 1.2rem;
-            font-family: 'Orbitron', sans-serif; width: 100%; margin-bottom: 25px;
+            color: var(--white-glow); padding: 12px; font-size: 1.1rem;
+            font-family: 'Orbitron', sans-serif; 
+            width: 100%; /* 親のpaddingを含めてはみ出さない */
+            margin-bottom: 20px;
             outline: none; text-align: center; box-shadow: inset 0 0 10px var(--energy-cyan);
         }
 
         .btn-main {
             background: transparent; border: 1px solid var(--aqua-glow);
-            color: var(--aqua-glow); padding: 18px 45px;
-            font-size: 1.1rem; letter-spacing: 4px; cursor: pointer;
+            color: var(--aqua-glow); padding: 15px 35px;
+            font-size: 1rem; letter-spacing: 3px; cursor: pointer;
             font-family: 'Orbitron', sans-serif; transition: 0.4s;
         }
 
@@ -168,7 +173,7 @@
         #result-screen { display: none; perspective: 2000px; opacity: 0; }
 
         .card {
-            width: 100%; height: 620px;
+            width: 100%; height: clamp(520px, 80vh, 620px); /* スマホで縮小 */
             position: relative; transform-style: preserve-3d;
             transition: transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
         }
@@ -177,7 +182,7 @@
 
         .card-face {
             position: absolute; width: 100%; height: 100%;
-            backface-visibility: hidden; padding: 25px;
+            backface-visibility: hidden; padding: 20px;
             display: flex; flex-direction: column;
             border: 1px solid var(--ui-border);
             background: rgba(0, 15, 35, 0.85);
@@ -210,15 +215,15 @@
 
         .card-header {
             font-family: 'Orbitron', sans-serif; border-left: 4px solid var(--aqua-glow);
-            padding-left: 15px; margin-bottom: 10px; text-align: left;
+            padding-left: 15px; margin-bottom: 5px; text-align: left;
         }
-        .code-label { font-size: 0.65rem; color: var(--aqua-glow); letter-spacing: 3px; }
-        .code-value { font-size: 2.6rem; font-weight: 700; line-height: 1; margin: 5px 0; }
-        .type-name { font-size: 1rem; font-weight: 700; letter-spacing: 1px; }
+        .code-label { font-size: 0.6rem; color: var(--aqua-glow); letter-spacing: 2px; }
+        .code-value { font-size: 2.2rem; font-weight: 700; line-height: 1; margin: 3px 0; }
+        .type-name { font-size: 0.9rem; font-weight: 700; letter-spacing: 1px; }
 
-        .img-container { flex: 1; min-height: 220px; display: flex; justify-content: center; align-items: center; position: relative; }
+        .img-container { flex: 1; min-height: 180px; display: flex; justify-content: center; align-items: center; position: relative; }
         .creature-img {
-            max-width: 100%; max-height: 180px;
+            max-width: 100%; max-height: 160px;
             object-fit: contain; transform: scale(1.3);
             animation: float 6s infinite ease-in-out;
             filter: drop-shadow(0 0 15px var(--energy-cyan));
@@ -227,41 +232,42 @@
 
         @keyframes float {
             0%, 100% { transform: translateY(0) scale(1.3) rotate(0deg); }
-            50% { transform: translateY(-20px) scale(1.35) rotate(2deg); }
+            50% { transform: translateY(-15px) scale(1.35) rotate(2deg); }
         }
 
         .data-grid { margin-top: auto; text-align: left; }
         .data-label { 
-            font-size: 0.75rem; color: var(--aqua-glow); font-weight: 700; 
-            margin-top: 15px; display: flex; justify-content: space-between;
-            border-bottom: 1px solid rgba(0, 242, 255, 0.2); padding-bottom: 3px;
+            font-size: 0.7rem; color: var(--aqua-glow); font-weight: 700; 
+            margin-top: 10px; display: flex; justify-content: space-between;
+            border-bottom: 1px solid rgba(0, 242, 255, 0.2); padding-bottom: 2px;
         }
-        .data-list { list-style: none; font-size: 0.85rem; line-height: 1.5; margin-top: 5px; font-weight: 300; }
+        .data-list { list-style: none; font-size: 0.8rem; line-height: 1.4; margin-top: 3px; font-weight: 300; }
 
         .observation-log {
-            font-size: 0.75rem; margin-top: 15px; padding: 12px;
-            background: rgba(0, 242, 255, 0.1); line-height: 1.6;
+            font-size: 0.7rem; margin-top: 10px; padding: 10px;
+            background: rgba(0, 242, 255, 0.1); line-height: 1.5;
             border-radius: 4px; border: 1px solid rgba(0, 242, 255, 0.1);
         }
 
-        .ui-feedback { margin-top: 20px; }
-        .instruction { font-size: 0.8rem; font-family: 'Orbitron', sans-serif; letter-spacing: 2px; animation: pulse 3s infinite; color: var(--aqua-glow); }
+        .ui-feedback { margin-top: 10px; } /* 凝縮 */
+        .instruction { font-size: 0.75rem; font-family: 'Orbitron', sans-serif; letter-spacing: 2px; animation: pulse 3s infinite; color: var(--aqua-glow); }
         @keyframes pulse { 0%, 100% { opacity: 0.3; } 50% { opacity: 1; text-shadow: 0 0 10px var(--aqua-glow); } }
 
         .btn-reboot {
-            margin-top: 15px; background: transparent; border: 1px solid rgba(255, 255, 255, 0.15);
-            color: rgba(255, 255, 255, 0.4); padding: 8px 20px; font-size: 0.65rem;
+            margin-top: 8px; background: transparent; border: 1px solid rgba(255, 255, 255, 0.15);
+            color: rgba(255, 255, 255, 0.4); padding: 6px 15px; font-size: 0.6rem;
             font-family: 'Orbitron', sans-serif; cursor: pointer; transition: 0.3s;
         }
 
+        /* フッターを最下部に固定 */
         .footer { 
-            position: static;
-            margin-top: 40px; 
-            margin-bottom: 20px;
+            position: fixed;
+            bottom: 15px;
+            left: 0;
             width: 100%; 
             text-align: center; 
             font-size: 0.5rem; 
-            opacity: 0.2; 
+            opacity: 0.3; /* 少し濃くして認識しやすく */
             letter-spacing: 3px; 
             font-family: 'Orbitron', sans-serif; 
             pointer-events: none; 
@@ -269,15 +275,16 @@
         }
         
         .bg-33 { background-size: cover !important; background-position: center !important; }
-   　　　/* 進化の瞬間のフラッシュ演出 */
-　　　　.flash-effect {
-    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-    background: white; opacity: 0; pointer-events: none; z-index: 1000;
-}
-　　　　@keyframes flash-anim {
-    　　　　0% { opacity: 0.8; }
-   　　　　 100% { opacity: 0; }
-}    
+
+        /* 進化の瞬間のフラッシュ演出 */
+        .flash-effect {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: white; opacity: 0; pointer-events: none; z-index: 1000;
+        }
+        @keyframes flash-anim {
+            0% { opacity: 0.8; }
+            100% { opacity: 0; }
+        }    
     </style></head><body>
 
     <div id="bg-canvas"></div>
@@ -300,7 +307,7 @@
         <div class="form-container">
             <input type="date" id="birthdate">
             <button class="btn-main" onclick="startObservation()">ANALYZE CODE</button>
-            <p style="font-size: 0.6rem; margin-top: 15px; opacity: 0.4; letter-spacing: 2px;">SYNCING AUDIO SYSTEM...</p>
+            <p style="font-size: 0.55rem; margin-top: 10px; opacity: 0.4; letter-spacing: 2px;">SYNCING AUDIO SYSTEM...</p>
         </div>
     </div>
 
@@ -336,10 +343,10 @@
     <div class="footer">CREATED BY SHIJIMI KEN</div>
 
     <audio id="bgm" loop><source src="music.mp3" type="audio/mpeg"></audio>
-　　<audio id="se-evolve"><source src="se_evolve.mp3" type="audio/mpeg"></audio>
-<audio id="se-revert"><source src="se_revert.mp3" type="audio/mpeg"></audio>
+    <audio id="se-evolve"><source src="se_evolve.mp3" type="audio/mpeg"></audio>
+    <audio id="se-revert"><source src="se_revert.mp3" type="audio/mpeg"></audio>
         
-        <script>
+    <script>
         function toggleManual() {
             const content = document.getElementById('manual-content');
             const btn = document.getElementById('manual-toggle');
@@ -448,47 +455,46 @@
         }
 
         function rebootSystem() {
-            const result = document.getElementById('result-screen');　const seEvolve = document.getElementById('se-evolve');
-    seEvolve.pause();
-    seEvolve.currentTime = 0;
+            const result = document.getElementById('result-screen');
+            const seEvolve = document.getElementById('se-evolve');
+            seEvolve.pause();
+            seEvolve.currentTime = 0;
 
-    result.style.opacity = '0';
-    setTimeout(() => {
-        document.getElementById('main-card').classList.remove('flipped');
-        document.body.classList.remove('system-evolved');
-        result.style.display = 'none';
-        document.getElementById('input-screen').style.display = 'block';
-        setTimeout(() => { document.getElementById('input-screen').style.opacity = '1'; }, 50);
-    }, 800);
-}          
+            result.style.opacity = '0';
+            setTimeout(() => {
+                document.getElementById('main-card').classList.remove('flipped');
+                document.body.classList.remove('system-evolved');
+                result.style.display = 'none';
+                document.getElementById('input-screen').style.display = 'block';
+                setTimeout(() => { document.getElementById('input-screen').style.opacity = '1'; }, 50);
+            }, 800);
+        }
+
         let pressTimer;
         const card = document.getElementById('main-card');
-        // --- JSの最後の方、長押し処理の部分を以下に書き換え ---
-const startPress = (e) => { 
-    if (e.type === 'touchstart') e.preventDefault(); 
-    pressTimer = setTimeout(() => {
-        const isFlipped = card.classList.toggle('flipped');
-        document.body.classList.toggle('system-evolved');
 
-        if (isFlipped) {
-            // 1. 進化した瞬間の音を鳴らす
-            document.getElementById('se-evolve').currentTime = 0;
-            document.getElementById('se-evolve').play().catch(()=>{});
+        const startPress = (e) => { 
+            if (e.type === 'touchstart') e.preventDefault(); 
+            pressTimer = setTimeout(() => {
+                const isFlipped = card.classList.toggle('flipped');
+                document.body.classList.toggle('system-evolved');
 
-            // 2. フラッシュ演出を実行
-            const flash = document.createElement('div');
-            flash.className = 'flash-effect';
-            flash.style.animation = 'flash-anim 0.4s ease-out';
-            document.body.appendChild(flash);
-            setTimeout(() => flash.remove(), 400);
-        } else {
-            // 表面に戻る時の音（控えめにするのがおすすめ）
-            document.getElementById('se-revert').currentTime = 0;
-            document.getElementById('se-revert').play().catch(()=>{});
-        }
-    }, 600); 
-};        
-            const cancelPress = () => clearTimeout(pressTimer);
+                if (isFlipped) {
+                    document.getElementById('se-evolve').currentTime = 0;
+                    document.getElementById('se-evolve').play().catch(()=>{});
+
+                    const flash = document.createElement('div');
+                    flash.className = 'flash-effect';
+                    flash.style.animation = 'flash-anim 0.4s ease-out';
+                    document.body.appendChild(flash);
+                    setTimeout(() => flash.remove(), 400);
+                } else {
+                    document.getElementById('se-revert').currentTime = 0;
+                    document.getElementById('se-revert').play().catch(()=>{});
+                }
+            }, 600); 
+        };        
+        const cancelPress = () => clearTimeout(pressTimer);
         card.addEventListener('mousedown', startPress); card.addEventListener('touchstart', startPress);
         card.addEventListener('mouseup', cancelPress); card.addEventListener('touchend', cancelPress);
         card.addEventListener('mouseleave', cancelPress);
