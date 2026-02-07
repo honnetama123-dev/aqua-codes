@@ -1,0 +1,503 @@
+<!DOCTYPE html><html lang="ja"><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aqua Codes | 深海都市解析システム</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Noto+Sans+JP:wght@300;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --deep-blue: #000814;
+            --aqua-glow: #00f2ff;
+            --white-glow: #e0faff;
+            --energy-cyan: rgba(0, 242, 255, 0.5);
+            --ui-border: rgba(0, 242, 255, 0.3);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background: var(--deep-blue);
+            color: var(--white-glow);
+            font-family: 'Noto Sans JP', sans-serif;
+            overflow-x: hidden;
+            overflow-y: auto;
+            min-height: 100dvh;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+            padding: 40px 0 20px 0;
+        }
+
+        /* --- 背景演出 --- */
+        #bg-canvas {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            z-index: -1;
+            background: radial-gradient(circle at 50% 50%, #001a33 0%, #000814 100%);
+        }
+
+        .bubble {
+            position: absolute; bottom: -50px;
+            background: rgba(255, 255, 255, 0.3);
+            box-shadow: 0 0 10px var(--energy-cyan);
+            border-radius: 50%; pointer-events: none;
+            animation: rise 12s infinite ease-in;
+            transition: opacity 2s ease;
+        }
+
+        @keyframes rise {
+            0% { transform: translateY(0) scale(1); opacity: 0; }
+            20% { opacity: 0.6; }
+            100% { transform: translateY(-125vh) scale(1.5); opacity: 0; }
+        }
+
+        body.system-evolved .bubble {
+            animation-duration: 25s !important;
+            opacity: 0.15;
+        }
+
+        body.system-evolved .bubble:nth-child(3n),
+        body.system-evolved .bubble:nth-child(3n-1) {
+            opacity: 0;
+        }
+
+        /* --- コンテナ --- */
+        .container { 
+            text-align: center; 
+            z-index: 10; 
+            transition: opacity 0.8s ease; 
+            width: 90%; 
+            max-width: 400px;
+            margin: auto 0;
+        }
+
+        h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: clamp(2rem, 6vw, 2.8rem);
+            letter-spacing: 0.6rem;
+            margin-bottom: 1.5rem;
+            text-shadow: 0 0 20px var(--aqua-glow), 0 0 40px var(--energy-cyan);
+        }
+
+        /* --- 取り扱い説明 (Manual) --- */
+        #manual-area {
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        #manual-toggle {
+            background: transparent;
+            border: none;
+            color: var(--aqua-glow);
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.65rem;
+            letter-spacing: 2px;
+            cursor: pointer;
+            padding: 5px 10px;
+            opacity: 0.7;
+            transition: 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        #manual-toggle:hover { opacity: 1; text-shadow: 0 0 10px var(--aqua-glow); }
+
+        #manual-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1), margin 0.5s ease, opacity 0.5s ease;
+            opacity: 0;
+            text-align: left;
+            background: rgba(0, 242, 255, 0.05);
+            border-radius: 4px;
+        }
+
+        #manual-content.open {
+            max-height: 250px;
+            margin-top: 10px;
+            opacity: 1;
+            padding: 15px;
+            border: 1px solid var(--ui-border);
+            overflow-y: auto;
+        }
+
+        .manual-text {
+            font-size: 0.7rem;
+            line-height: 1.7;
+            color: var(--white-glow);
+        }
+
+        .manual-header {
+            color: var(--aqua-glow);
+            font-weight: bold;
+            margin-bottom: 5px;
+            display: block;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.6rem;
+        }
+
+        /* --- 入力画面 --- */
+        .form-container {
+            background: rgba(255, 255, 255, 0.03);
+            padding: 2.5rem 1.5rem;
+            border: 1px solid var(--ui-border);
+            backdrop-filter: blur(25px);
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
+        }
+
+        input[type="date"] {
+            background: rgba(0, 0, 0, 0.6); border: 1px solid var(--aqua-glow);
+            color: var(--white-glow); padding: 15px; font-size: 1.2rem;
+            font-family: 'Orbitron', sans-serif; width: 100%; margin-bottom: 25px;
+            outline: none; text-align: center; box-shadow: inset 0 0 10px var(--energy-cyan);
+        }
+
+        .btn-main {
+            background: transparent; border: 1px solid var(--aqua-glow);
+            color: var(--aqua-glow); padding: 18px 45px;
+            font-size: 1.1rem; letter-spacing: 4px; cursor: pointer;
+            font-family: 'Orbitron', sans-serif; transition: 0.4s;
+        }
+
+        .btn-main:hover {
+            background: var(--aqua-glow); color: var(--deep-blue);
+            box-shadow: 0 0 30px var(--aqua-glow);
+        }
+
+        /* --- 結果画面 --- */
+        #result-screen { display: none; perspective: 2000px; opacity: 0; }
+
+        .card {
+            width: 100%; height: 620px;
+            position: relative; transform-style: preserve-3d;
+            transition: transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+        }
+
+        .card.flipped { transform: rotateY(180deg); }
+
+        .card-face {
+            position: absolute; width: 100%; height: 100%;
+            backface-visibility: hidden; padding: 25px;
+            display: flex; flex-direction: column;
+            border: 1px solid var(--ui-border);
+            background: rgba(0, 15, 35, 0.85);
+            backdrop-filter: blur(18px);
+            overflow-y: auto; scrollbar-width: none;
+        }
+        .card-face::-webkit-scrollbar { display: none; }
+
+        .card-back {
+            transform: rotateY(180deg);
+            background: rgba(0, 40, 80, 0.6);
+            border: 1px solid var(--aqua-glow);
+            box-shadow: inset 0 0 50px rgba(0, 242, 255, 0.2);
+        }
+
+        .particles {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none; z-index: -1;
+            background-image: 
+                radial-gradient(circle at 50% 50%, var(--aqua-glow) 1px, transparent 1px),
+                radial-gradient(circle at 20% 80%, var(--white-glow) 1px, transparent 1px);
+            background-size: 40px 40px, 60px 60px;
+            animation: particleScroll 20s linear infinite;
+            opacity: 0.15;
+        }
+        @keyframes particleScroll {
+            from { background-position: 0 0; }
+            to { background-position: 0 -1000px; }
+        }
+
+        .card-header {
+            font-family: 'Orbitron', sans-serif; border-left: 4px solid var(--aqua-glow);
+            padding-left: 15px; margin-bottom: 10px; text-align: left;
+        }
+        .code-label { font-size: 0.65rem; color: var(--aqua-glow); letter-spacing: 3px; }
+        .code-value { font-size: 2.6rem; font-weight: 700; line-height: 1; margin: 5px 0; }
+        .type-name { font-size: 1rem; font-weight: 700; letter-spacing: 1px; }
+
+        .img-container { flex: 1; min-height: 220px; display: flex; justify-content: center; align-items: center; position: relative; }
+        .creature-img {
+            max-width: 100%; max-height: 180px;
+            object-fit: contain; transform: scale(1.3);
+            animation: float 6s infinite ease-in-out;
+            filter: drop-shadow(0 0 15px var(--energy-cyan));
+        }
+        .card-back .creature-img { filter: drop-shadow(0 0 25px var(--aqua-glow)) brightness(1.2) saturate(1.5); }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) scale(1.3) rotate(0deg); }
+            50% { transform: translateY(-20px) scale(1.35) rotate(2deg); }
+        }
+
+        .data-grid { margin-top: auto; text-align: left; }
+        .data-label { 
+            font-size: 0.75rem; color: var(--aqua-glow); font-weight: 700; 
+            margin-top: 15px; display: flex; justify-content: space-between;
+            border-bottom: 1px solid rgba(0, 242, 255, 0.2); padding-bottom: 3px;
+        }
+        .data-list { list-style: none; font-size: 0.85rem; line-height: 1.5; margin-top: 5px; font-weight: 300; }
+
+        .observation-log {
+            font-size: 0.75rem; margin-top: 15px; padding: 12px;
+            background: rgba(0, 242, 255, 0.1); line-height: 1.6;
+            border-radius: 4px; border: 1px solid rgba(0, 242, 255, 0.1);
+        }
+
+        .ui-feedback { margin-top: 20px; }
+        .instruction { font-size: 0.8rem; font-family: 'Orbitron', sans-serif; letter-spacing: 2px; animation: pulse 3s infinite; color: var(--aqua-glow); }
+        @keyframes pulse { 0%, 100% { opacity: 0.3; } 50% { opacity: 1; text-shadow: 0 0 10px var(--aqua-glow); } }
+
+        .btn-reboot {
+            margin-top: 15px; background: transparent; border: 1px solid rgba(255, 255, 255, 0.15);
+            color: rgba(255, 255, 255, 0.4); padding: 8px 20px; font-size: 0.65rem;
+            font-family: 'Orbitron', sans-serif; cursor: pointer; transition: 0.3s;
+        }
+
+        .footer { 
+            position: static;
+            margin-top: 40px; 
+            margin-bottom: 20px;
+            width: 100%; 
+            text-align: center; 
+            font-size: 0.5rem; 
+            opacity: 0.2; 
+            letter-spacing: 3px; 
+            font-family: 'Orbitron', sans-serif; 
+            pointer-events: none; 
+            z-index: 100; 
+        }
+        
+        .bg-33 { background-size: cover !important; background-position: center !important; }
+   　　　/* 進化の瞬間のフラッシュ演出 */
+　　　　.flash-effect {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: white; opacity: 0; pointer-events: none; z-index: 1000;
+}
+　　　　@keyframes flash-anim {
+    　　　　0% { opacity: 0.8; }
+   　　　　 100% { opacity: 0; }
+}    
+    </style></head><body>
+
+    <div id="bg-canvas"></div>
+
+    <div id="input-screen" class="container">
+        <h1>Aqua Codes</h1>
+        <div id="manual-area">
+            <button id="manual-toggle" onclick="toggleManual()">[ VIEW MANUAL ] 使い方を見る</button>
+            <div id="manual-content">
+                <div class="manual-text">
+                    <span class="manual-header">ABOUT SYSTEM</span>
+                    生年月日から、キミという人間が持つ「海の暗号」を解析します。<br><br>
+                    <span class="manual-header">HOW TO USE</span>
+                    1. 誕生日を入力し「ANALYZE CODE」を押してください。<br>
+                    2. 表面（PAST）にはキミのベースとなる能力が表示されます。<br>
+                    3. カードを長押しすると、裏面（CURRENT）の進化状態が同期されます。
+                </div>
+            </div>
+        </div>
+        <div class="form-container">
+            <input type="date" id="birthdate">
+            <button class="btn-main" onclick="startObservation()">ANALYZE CODE</button>
+            <p style="font-size: 0.6rem; margin-top: 15px; opacity: 0.4; letter-spacing: 2px;">SYNCING AUDIO SYSTEM...</p>
+        </div>
+    </div>
+
+    <div id="result-screen" class="container">
+        <div class="card" id="main-card">
+            <div class="card-face card-front">
+                <div class="particles"></div>
+                <div class="card-header"><p class="code-label">ARCHIVE / PAST</p><div class="code-value" id="p-num">--</div><div class="type-name" id="p-name">--</div></div>
+                <div class="img-container"><img id="p-img" src="" alt="creature" class="creature-img"></div>
+                <div class="data-grid">
+                    <span class="data-label">基本性能 <span>SKILLS</span></span><ul class="data-list" id="p-ability"></ul>
+                    <span class="data-label">エラー回避 <span>CAUTION</span></span><ul class="data-list" id="p-caution"></ul>
+                    <div class="observation-log" id="p-log"></div>
+                </div>
+            </div>
+            <div class="card-face card-back" id="back-face">
+                <div class="particles" style="opacity: 0.4; animation-duration: 10s;"></div>
+                <div class="card-header"><p class="code-label">EVOLUTION / CURRENT</p><div class="code-value" id="c-num">--</div><div class="type-name" id="c-name">--</div></div>
+                <div class="img-container"><img id="c-img" src="" alt="evolved" class="creature-img"></div>
+                <div class="data-grid">
+                    <span class="data-label">潜在出力 <span>ENERGY</span></span><ul class="data-list" id="c-energy"></ul>
+                    <span class="data-label">思考論理 <span>LOGIC</span></span><ul class="data-list" id="c-drive"></ul>
+                    <div class="observation-log" id="c-log"></div>
+                </div>
+            </div>
+        </div>
+        <div class="ui-feedback">
+            <p class="instruction">[ HOLD ] 進化状態を同期中...</p>
+            <button class="btn-reboot" onclick="rebootSystem()">[ SYSTEM REBOOT ]</button>
+        </div>
+    </div>
+
+    <div class="footer">CREATED BY SHIJIMI KEN</div>
+
+    <audio id="bgm" loop><source src="music.mp3" type="audio/mpeg"></audio>
+　　<audio id="se-evolve"><source src="se_evolve.mp3" type="audio/mpeg"></audio>
+<audio id="se-revert"><source src="se_revert.mp3" type="audio/mpeg"></audio>
+        
+        <script>
+        function toggleManual() {
+            const content = document.getElementById('manual-content');
+            const btn = document.getElementById('manual-toggle');
+            content.classList.toggle('open');
+            btn.innerText = content.classList.contains('open') ? "[ CLOSE MANUAL ] 閉じる" : "[ VIEW MANUAL ] 使い方を見る";
+        }
+
+        const codeSpecs = {
+          "01": {
+            past: { name: "開拓突進型", ability: ["新しいことを始める", "きっかけを作る", "迷わず行動する"], caution: ["人に任せるのが苦手", "途中で次に行きたくなることがある"], log: "流れの速い海でも迷わず進むと、周囲の環境が形を整える" },
+            current: { name: "高速制御型", ability: ["素早く環境に対応する", "判断力の速さを活かす"], caution: ["状況優先の意思決定", "危険察知と回避を重視"], log: "自分のスピードを信じて前に進め" }
+          },
+          "02": {
+            past: { name: "協調連携型", ability: ["周囲と連携して動ける", "状況を観察して適切に支援できる", "チームのバランスを整えられる"], caution: ["意見を優先しすぎることがある", "自分を後回しにしがち"], log: "仲間と共に波を乗り越え、安定した海域を作る" },
+            current: { name: "情報伝達型", ability: ["他者と素早く連携", "情報を正確に伝える"], caution: ["相手の反応を確認しながら行動", "調整と最適化を重視"], log: "みんなの声を感じて、最善を導け" }
+          },
+          "03": {
+            past: { name: "表現創造型", ability: ["感情やアイデアを自由に表現できる", "新しい発想を形にする", "周囲に刺激を与えられる"], caution: ["散漫になりやすい", "一つのことに集中しにくい"], log: "自由に泳ぎながら、海に彩りを添える" },
+            current: { name: "観測調整型", ability: ["環境変化を敏感に察知", "状況に合わせて適応"], caution: ["集団の動きを優先", "調和と安全性を重視"], log: "周囲の変化に気を配れば、平和を保てる" }
+          },
+          "04": {
+            past: { name: "長距離耐久型", ability: ["ゆっくりでも確実に進む", "長期計画を立てて行動"], caution: ["焦りやすい状況では注意", "変化の早い環境では適応が遅れる"], log: "安定したペースで進むことで、海の流れが整う" },
+            current: { name: "長距離耐久型（進化版）", ability: ["忍耐力を活かした意思決定", "安定を優先"], caution: ["短期成果に惑わされやすい", "焦らず進むことが必要"], log: "焦らず確実に歩みを進めよ" }
+          },
+          "05": {
+            past: { name: "多重対応型", ability: ["同時に複数の作業を処理", "柔軟に方法を変えられる"], caution: ["集中力が分散しやすい", "優先順位の判断が難しい"], log: "柔軟に動くことで、次の波を乗り越える" },
+            current: { name: "多重対応型（進化版）", ability: ["状況に応じて戦略を変更", "問題解決を重視"], caution: ["焦って手順を飛ばすことがある", "柔軟さと正確さのバランスが必要"], log: "柔軟な発想が、次の道を切り開く" }
+          },
+          "06": {
+            past: { name: "基盤統合型", ability: ["大きな力で環境を支える", "情報やエネルギーの広がりを管理"], caution: ["自己流で進めすぎることがある", "全体の調整を怠らないよう注意"], log: "周囲を支えつつ、自身の海域を広げる" },
+            current: { name: "基盤統合型（進化版）", ability: ["全体最適を重視", "長期視点で判断"], caution: ["局所的な問題に囚われやすい", "大局観を忘れずに"], log: "自分の力で周囲を安定させよ" }
+          },
+          "07": {
+            past: { name: "静音観測型", ability: ["周囲の変化を静かに感知", "目立たず情報を集める"], caution: ["消極的になりやすい", "情報収集が優先になりすぎる"], log: "静かに見守り、全体を理解する" },
+            current: { name: "静音観測型（進化版）", ability: ["観察を優先", "慎重に行動"], caution: ["情報をため込みすぎる", "動くタイミングを逃しやすい"], log: "静かに見守ることで、全体が見える" }
+          },
+          "08": {
+            past: { name: "戦術精密型", ability: ["高精度な判断力", "チームの力を最大化"], caution: ["独断になりやすい", "慎重さと速さのバランスが必要"], log: "戦略的に動き、最善を目指す" },
+            current: { name: "戦術精密型（進化版）", ability: ["戦略的に行動", "危機対応に優れる"], caution: ["細部に拘りすぎる", "全体を見失わないように"], log: "冷静に状況を分析し、最善を選べ" }
+          },
+          "09": {
+            past: { name: "情報透過型", ability: ["知識や情報を周囲に伝達", "流動的に適応"], caution: ["柔軟性が過剰になりやすい", "流れに流されすぎることがある"], log: "情報を流しながら、周囲に影響を与える" },
+            current: { name: "情報透過型（進化版）", ability: ["柔軟性を重視", "周囲の流れに沿った行動"], caution: ["自己主張が弱くなりやすい", "重要な判断を先延ばしにしない"], log: "情報を流すことで、新たな可能性を作れる" }
+          },
+          "11": {
+            past: { name: "空間滑空型", ability: ["高い自由度で行動", "広範囲を監視"], caution: ["自由すぎて迷うことがある", "効率を無視しがち"], log: "自由に動きながら、空間を把握する" },
+            current: { name: "空間滑空型（進化版）", ability: ["視野を広く持ち、判断", "効率的な移動を重視"], caution: ["集中力が散漫になりやすい", "計画を忘れがち"], log: "自由に動くことで、新しい視点を得よ" }
+          },
+          "22": {
+            past: { name: "環境統合型", ability: ["周囲の調和を維持", "集団での効果を最大化"], caution: ["協力を優先しすぎる", "自己主張が後回しになる"], log: "支え合いながら、環境を安定させる" },
+            current: { name: "環境統合型（進化版）", ability: ["協力と整理を優先", "安定性を重視"], caution: ["自己判断が鈍りやすい", "集団に流されすぎないよう注意"], log: "支える力が、みんなを強くする" }
+          },
+          "33": {
+            past: { name: "絶対統合型", ability: ["全体を見渡す力", "流れを統括する能力"], caution: ["全体の調整を意識しすぎる", "個別の判断が鈍ることがある"], log: "すべてを統括し、海のバランスを保つ" },
+            current: { name: "絶対統合型（進化版）", ability: ["統合と調整を最優先", "全体のバランスを確認"], caution: ["局所的に偏りが出やすい", "全体を俯瞰しすぎて行動が遅れる"], log: "すべてを包み、すべてを動かす存在" }
+          }
+        };
+
+        function sumDigits(n) { return String(n).split('').reduce((a, b) => Number(a) + Number(b), 0); }
+        function getPastCode(day) {
+            if (day === 11 || day === 22) return day;
+            let n = sumDigits(day); while (n > 9 && n !== 11 && n !== 22) n = sumDigits(n); return n;
+        }
+        function getCurrentCode(y, m, d) {
+            let sum = String(y).split('').concat(String(m).split(''), String(d).split('')).reduce((a, b) => Number(a) + Number(b), 0);
+            while (sum > 9 && sum !== 11 && sum !== 22 && sum !== 33) sum = sumDigits(sum); return sum;
+        }
+
+        function startObservation() {
+            const dateStr = document.getElementById('birthdate').value;
+            if(!dateStr) return;
+            const date = new Date(dateStr);
+            renderCard(getPastCode(date.getDate()), getCurrentCode(date.getFullYear(), date.getMonth() + 1, date.getDate()));
+            document.getElementById('bgm').play().catch(()=>{});
+            document.getElementById('input-screen').style.opacity = '0';
+            setTimeout(() => {
+                document.getElementById('input-screen').style.display = 'none';
+                document.getElementById('result-screen').style.display = 'block';
+                setTimeout(() => { document.getElementById('result-screen').style.opacity = '1'; }, 50);
+            }, 800);
+        }
+
+        function renderCard(p, c) {
+            const ps = String(p).padStart(2, '0'), cs = String(c).padStart(2, '0');
+            const dataPast = codeSpecs[ps].past;
+            const dataCurrent = codeSpecs[cs].current;
+
+            document.getElementById('p-num').innerText = ps;
+            document.getElementById('p-name').innerText = dataPast.name;
+            document.getElementById('p-img').src = `past${ps}.png`;
+            document.getElementById('p-ability').innerHTML = dataPast.ability.map(v => `<li>▶ ${v}</li>`).join('');
+            document.getElementById('p-caution').innerHTML = dataPast.caution.map(v => `<li>▶ ${v}</li>`).join('');
+            document.getElementById('p-log').innerHTML = `個体ログ / PROFILE:<br>${dataPast.log}`;
+            
+            document.getElementById('c-num').innerText = cs;
+            document.getElementById('c-name').innerText = dataCurrent.name;
+            const cImg = document.getElementById('c-img'), cFace = document.getElementById('back-face');
+            if (cs === "33") {
+                cImg.style.display = 'none'; cFace.classList.add('bg-33'); cFace.style.background = `url('current33.png')`;
+            } else {
+                cImg.style.display = 'block'; cImg.src = `current${cs}.png`; cFace.classList.remove('bg-33');
+            }
+            document.getElementById('c-energy').innerHTML = dataCurrent.ability.map(v => `<li>▶ ${v}</li>`).join('');
+            document.getElementById('c-drive').innerHTML = dataCurrent.caution.map(v => `<li>▶ ${v}</li>`).join('');
+            document.getElementById('c-log').innerHTML = `解析レポート / REPORT:<br>${dataCurrent.log}`;
+        }
+
+        function rebootSystem() {
+            const result = document.getElementById('result-screen');　const seEvolve = document.getElementById('se-evolve');
+    seEvolve.pause();
+    seEvolve.currentTime = 0;
+
+    result.style.opacity = '0';
+    setTimeout(() => {
+        document.getElementById('main-card').classList.remove('flipped');
+        document.body.classList.remove('system-evolved');
+        result.style.display = 'none';
+        document.getElementById('input-screen').style.display = 'block';
+        setTimeout(() => { document.getElementById('input-screen').style.opacity = '1'; }, 50);
+    }, 800);
+}          
+        let pressTimer;
+        const card = document.getElementById('main-card');
+        // --- JSの最後の方、長押し処理の部分を以下に書き換え ---
+const startPress = (e) => { 
+    if (e.type === 'touchstart') e.preventDefault(); 
+    pressTimer = setTimeout(() => {
+        const isFlipped = card.classList.toggle('flipped');
+        document.body.classList.toggle('system-evolved');
+
+        if (isFlipped) {
+            // 1. 進化した瞬間の音を鳴らす
+            document.getElementById('se-evolve').currentTime = 0;
+            document.getElementById('se-evolve').play().catch(()=>{});
+
+            // 2. フラッシュ演出を実行
+            const flash = document.createElement('div');
+            flash.className = 'flash-effect';
+            flash.style.animation = 'flash-anim 0.4s ease-out';
+            document.body.appendChild(flash);
+            setTimeout(() => flash.remove(), 400);
+        } else {
+            // 表面に戻る時の音（控えめにするのがおすすめ）
+            document.getElementById('se-revert').currentTime = 0;
+            document.getElementById('se-revert').play().catch(()=>{});
+        }
+    }, 600); 
+};        
+            const cancelPress = () => clearTimeout(pressTimer);
+        card.addEventListener('mousedown', startPress); card.addEventListener('touchstart', startPress);
+        card.addEventListener('mouseup', cancelPress); card.addEventListener('touchend', cancelPress);
+        card.addEventListener('mouseleave', cancelPress);
+
+        const bg = document.getElementById('bg-canvas');
+        for(let i=0; i<35; i++) {
+            const b = document.createElement('div'); b.className = 'bubble';
+            const size = Math.random() * 8 + 3; b.style.width = size + 'px'; b.style.height = size + 'px';
+            b.style.left = Math.random() * 100 + '%'; b.style.animationDuration = (Math.random() * 8 + 6) + 's';
+            b.style.animationDelay = (Math.random() * 5) + 's'; bg.appendChild(b);
+        }
+    </script></body></html>
