@@ -12,7 +12,6 @@
             --ui-border: rgba(0, 242, 255, 0.3);
         }
 
-        /* box-sizingを全体に適用 */
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
@@ -26,8 +25,8 @@
             flex-direction: column;
             justify-content: flex-start;
             align-items: center;
-            /* クレジット固定用の余白を確保しつつ、上部余白を凝縮 */
-            padding: 20px 0 60px 0;
+            /* 下部の固定クレジットとの重なりを防ぐためpaddingを増加 */
+            padding: 20px 0 100px 0;
         }
 
         /* --- 背景演出 --- */
@@ -69,21 +68,20 @@
             transition: opacity 0.8s ease; 
             width: 90%; 
             max-width: 400px;
-            /* 上下中央配置のためのマージン */
             margin: auto 0;
         }
 
         h1 {
             font-family: 'Orbitron', sans-serif;
-            font-size: clamp(1.8rem, 6vw, 2.5rem); /* 少し小さく */
+            font-size: clamp(1.8rem, 6vw, 2.5rem);
             letter-spacing: 0.5rem;
-            margin-bottom: 1rem; /* 凝縮 */
+            margin-bottom: 1rem;
             text-shadow: 0 0 20px var(--aqua-glow), 0 0 40px var(--energy-cyan);
         }
 
         /* --- 取り扱い説明 (Manual) --- */
         #manual-area {
-            margin-bottom: 1rem; /* 凝縮 */
+            margin-bottom: 1rem;
             text-align: center;
         }
 
@@ -116,7 +114,7 @@
         }
 
         #manual-content.open {
-            max-height: 200px; /* 少し縮小 */
+            max-height: 200px;
             margin-top: 10px;
             opacity: 1;
             padding: 12px;
@@ -142,19 +140,23 @@
         /* --- 入力画面 --- */
         .form-container {
             background: rgba(255, 255, 255, 0.03);
-            padding: 1.5rem 1.2rem; /* 凝縮 */
+            padding: 1.5rem 1.2rem;
             border: 1px solid var(--ui-border);
             backdrop-filter: blur(25px);
             box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
+            width: 100%;
         }
 
         input[type="date"] {
             background: rgba(0, 0, 0, 0.6); border: 1px solid var(--aqua-glow);
             color: var(--white-glow); padding: 12px; font-size: 1.1rem;
             font-family: 'Orbitron', sans-serif; 
-            width: 100%; /* 親のpaddingを含めてはみ出さない */
+            width: 100%;
+            max-width: 100%; /* はみ出し防止 */
+            display: block;  /* レイアウト安定化 */
             margin-bottom: 20px;
             outline: none; text-align: center; box-shadow: inset 0 0 10px var(--energy-cyan);
+            -webkit-appearance: none; /* iOSブラウザ対策 */
         }
 
         .btn-main {
@@ -173,7 +175,7 @@
         #result-screen { display: none; perspective: 2000px; opacity: 0; }
 
         .card {
-            width: 100%; height: clamp(520px, 80vh, 620px); /* スマホで縮小 */
+            width: 100%; height: clamp(520px, 80vh, 620px);
             position: relative; transform-style: preserve-3d;
             transition: transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
         }
@@ -249,7 +251,8 @@
             border-radius: 4px; border: 1px solid rgba(0, 242, 255, 0.1);
         }
 
-        .ui-feedback { margin-top: 10px; } /* 凝縮 */
+        /* 戻るボタンエリアに下部余白を追加してフッターとの重なりを回避 */
+        .ui-feedback { margin-top: 10px; margin-bottom: 30px; } 
         .instruction { font-size: 0.75rem; font-family: 'Orbitron', sans-serif; letter-spacing: 2px; animation: pulse 3s infinite; color: var(--aqua-glow); }
         @keyframes pulse { 0%, 100% { opacity: 0.3; } 50% { opacity: 1; text-shadow: 0 0 10px var(--aqua-glow); } }
 
@@ -259,7 +262,6 @@
             font-family: 'Orbitron', sans-serif; cursor: pointer; transition: 0.3s;
         }
 
-        /* フッターを最下部に固定 */
         .footer { 
             position: fixed;
             bottom: 15px;
@@ -267,7 +269,7 @@
             width: 100%; 
             text-align: center; 
             font-size: 0.5rem; 
-            opacity: 0.3; /* 少し濃くして認識しやすく */
+            opacity: 0.3;
             letter-spacing: 3px; 
             font-family: 'Orbitron', sans-serif; 
             pointer-events: none; 
@@ -276,7 +278,6 @@
         
         .bg-33 { background-size: cover !important; background-position: center !important; }
 
-        /* 進化の瞬間のフラッシュ演出 */
         .flash-effect {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: white; opacity: 0; pointer-events: none; z-index: 1000;
