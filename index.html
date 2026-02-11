@@ -1,7 +1,17 @@
 <!DOCTYPE html><html lang="ja"><head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Aqua Codes | 深海都市解析システム</title>
+
+    <!-- --- ホーム画面アイコン・アプリ化設定 --- -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Aqua Codes">
+    <!-- あなたが作った新しい画像の名前（my-icon.png）を指定 -->
+    <link rel="apple-touch-icon" href="my-icon.png">
+    <!-- Android用設定ファイル -->
+    <link rel="manifest" href="manifest.json">
+
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Noto+Sans+JP:wght@300;500;700&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -286,14 +296,6 @@
             0% { opacity: 0.8; }
             100% { opacity: 0; }
         }    
-　　<!-- ホーム画面追加時の設定 -->
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Aqua Codes">
-<!-- アイコン指定：既存の画像から1つ選ぶか、専用のicon.pngを用意してください -->
-<link rel="apple-touch-icon" href="past01.png">
-<!-- Android用設定ファイル -->
-<link rel="manifest" href="manifest.json">        
     </style></head><body>
 
     <div id="bg-canvas"></div>
@@ -366,7 +368,7 @@
         const codeSpecs = {
           "01": {
             past: { name: "開拓突進型", ability: ["新しいことを始める", "きっかけを作る", "迷わず行動する"], caution: ["人に任せるのが苦手", "途中で次に行きたくなることがある"], log: "流れの速い海でも迷わず進むと、周囲の環境が形を整える" },
-            current: { name: "高速制御型", ability: ["素早く環境に対応する", "判断力の速さを活かす"], caution: ["状況優先の意思決定", "危険察知と回避を重視"], log: "自分のスピードを信じて前に進め" }
+            current: { name: "高速制御型", ability: ["素べく環境に対応する", "判断力の速さを活かす"], caution: ["状況優先の意思決定", "危険察知と回避を重視"], log: "自分のスピードを信じて前に進め" }
           },
           "02": {
             past: { name: "協調連携型", ability: ["周囲と連携して動ける", "状況を観察して適切に支援できる", "チームのバランスを整えられる"], caution: ["意見を優先しすぎることがある", "自分を後回しにしがち"], log: "仲間と共に波を乗り越え、安定した海域を作る" },
