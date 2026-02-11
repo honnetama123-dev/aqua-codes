@@ -1,15 +1,13 @@
 {
+  "name": "Aqua Codes",
   "short_name": "AquaCodes",
-  "name": "Aqua Codes | 深海都市解析システム",
+  "display": "standalone",
+  "start_url": "index.html",
   "icons": [
     {
-      "src": "past01.png",
+      "src": "my-icon.png",
       "sizes": "192x192",
       "type": "image/png"
     }
-  ],
-  "start_url": "index.html",
-  "display": "standalone",
-  "theme_color": "#000814",
-  "background_color": "#000814"
+  ]
 }
